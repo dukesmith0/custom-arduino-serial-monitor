@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -49,11 +50,12 @@ func ExportCSV(lines []SerialLine, opts CSVExportOptions) error {
 			}
 		}
 
+		fields := strings.Split(line.Data, ",")
 		var record []string
 		if opts.IncludeTimestamps {
-			record = []string{line.Timestamp.Format("2006-01-02 15:04:05.000"), line.Data}
+			record = append([]string{line.Timestamp.Format("2006-01-02 15:04:05.000")}, fields...)
 		} else {
-			record = []string{line.Data}
+			record = fields
 		}
 
 		if err := w.Write(record); err != nil {
